@@ -6,8 +6,8 @@ export class UserService {
   private readonly users = [
     {
       id: 1,
-      username: 'john',
-      password: bcrypt.hashSync('changeme', 10),
+      username: 'test',
+      password: bcrypt.hashSync('12345', 10),
     },
   ];
 
