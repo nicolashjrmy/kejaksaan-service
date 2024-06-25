@@ -10,7 +10,7 @@ import { AppService } from './app.service';
       'neo4j://192.168.18.16:7687',
       'neo4j',
       'Ddi12345!',
-      'jamintel1',
+      'jamintel2',
     ),
   ],
   controllers: [AppController],
