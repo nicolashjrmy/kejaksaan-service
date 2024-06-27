@@ -5,36 +5,45 @@ export function createDriver(uri: string, user: string, password: string) {
 }
 
 export function formatResponse(records: any[]): any {
-  const nodes = [];
+  const nodes = new Map();
   const edges = [];
 
   records.forEach((record) => {
-    record._fields.forEach((field) => {
-      if (field.start) {
-        nodes.push({
-          id: field.start.identity.toString(),
-          label: field.start.labels,
-          properties: field.start.properties,
-        });
-      }
-      if (field.relationship) {
+    record._fields.forEach((_field) => {
+      _field.segments.forEach((segment) => {
+        const startNode = segment.start;
+        const endNode = segment.end;
+        const relationship = segment.relationship;
+
+        // Add start node if it doesn't exist
+        if (!nodes.has(startNode.elementId)) {
+          nodes.set(startNode.elementId, {
+            id: startNode.elementId,
+            label: startNode.labels,
+            properties: startNode.properties,
+          });
+        }
+
+        // Add end node if it doesn't exist
+        if (!nodes.has(endNode.elementId)) {
+          nodes.set(endNode.elementId, {
+            id: endNode.elementId,
+            label: endNode.labels,
+            properties: endNode.properties,
+          });
+        }
+
+        // Add relationship
         edges.push({
-          id: field.relationship.identity.toString(),
-          from: field.relationship.start.toString(),
-          to: field.relationship.end.toString(),
-          label: field.relationship.type,
-          properties: field.relationship.properties,
+          id: relationship.elementId,
+          from: relationship.startNodeElementId,
+          to: relationship.endNodeElementId,
+          label: relationship.type,
+          properties: relationship.properties,
         });
-      }
-      if (field.end) {
-        nodes.push({
-          id: field.end.identity.toString(),
-          label: field.end.labels,
-          properties: field.end.properties,
-        });
-      }
+      });
     });
   });
 
-  return { nodes, edges };
+  return { nodes: Array.from(nodes.values()), edges };
 }

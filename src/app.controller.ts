@@ -11,13 +11,7 @@ export class AppController {
   @Get('nodes')
   async getNodes() {
     const result = await this.neo4jService.read('MATCH (n) RETURN n LIMIT 25');
-    const formattedResult = formatResponse(result.records);
-    return {
-      status: true,
-      statusCode: 200,
-      message: 'Successfully get schema',
-      data: formattedResult,
-    };
+    return result.records.map((record) => record.get('n').properties);
   }
 
   @Get('suspects')
@@ -44,7 +38,7 @@ export class AppController {
     return result.records.map((record) => record.get('count').low);
   }
 
-  @Get('locburonan')
+  @Get('loc-buronan')
   async getLocationBuronan() {
     const result = await this.neo4jService.read(
       'match p=(:Buronan)-[]-() where none(z in nodes(p) where z:Website) return p',
@@ -52,7 +46,7 @@ export class AppController {
     return result.records.map((record) => record.get('p').properties);
   }
 
-  @Get('oneBuron')
+  @Get('one-buron')
   async getOneBuron() {
     const result = await this.neo4jService.read(
       'MATCH (n:Buronan) RETURN n LIMIT 1',
@@ -60,17 +54,18 @@ export class AppController {
     return result.records.map((record) => record.get('n').properties);
   }
 
-  @Get('graphWebsite')
+  @Get('graph-website')
   async getGraphWebsite() {
     const result = await this.neo4jService.read(
       `match p=(:Buronan)-[]-() 
       where none(z in nodes(p) where z:Website) 
       return p`,
     );
-    return result.records.map((record) => record.get('p').properties);
+    const formatResult = formatResponse(result.records);
+    return formatResult;
   }
 
-  @Get('transaksiBank')
+  @Get('transaksi-bank')
   async getTransaksiBank() {
     const result = await this.neo4jService.read(
       `MATCH p=(a{no_rekening:$neodash_norek})-[r:HAS_TRANSACTION]->(b) RETURN a.no_rekening,b.tx_date,b.type,b.vendor
@@ -79,7 +74,7 @@ order by b.tx_date desc`,
     return result.records.map((record) => record.get('p'));
   }
 
-  @Get('graphEmail')
+  @Get('graph-email')
   async getGraphEmail() {
     const result = await this.neo4jService.read(
       `match (we:Website)
@@ -101,7 +96,7 @@ r      return we.url,we.content as p`,
     return result.records.map((record) => record.get('p').properties);
   }
 
-  @Get('phonecall')
+  @Get('phone-call')
   async getPhonecall() {
     const result = await this.neo4jService.read(
       `MATCH p1=(ph1:PhoneNumber)--(a:Call)-[r:TIMELINE]->(b:Call{dateTime:$neodash_custom1})--(ph2:PhoneNumber)
@@ -122,5 +117,14 @@ r      return we.url,we.content as p`,
       RETURN p1`,
     );
     return result.records.map((record) => record.get('p').properties);
+  }
+
+  @Get('graph-profil-buron')
+  async getGraphProfilBuron() {
+    const result = await this.neo4jService.read(
+      `MATCH p=(:Buronan)--() RETURN p LIMIT 25`,
+    );
+    const formatResult = formatResponse(result.records);
+    return formatResult;
   }
 }
