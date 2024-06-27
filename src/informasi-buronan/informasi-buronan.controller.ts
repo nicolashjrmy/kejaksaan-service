@@ -107,7 +107,7 @@ export class InformasiBuronanController {
   @Get('phone-call')
   async getPhonecall() {
     const result = await this.neo4jService.read(
-      `MATCH p1=(ph1:PhoneNumber)--(a:Call)-[r:TIMELINE]->(b:Call{dateTime:$neodash_custom1})--(ph2:PhoneNumber)
+      `MATCH p1=(ph1:PhoneNumber)--(a:Call)-[r:TIMELINE]->(b:Call{dateTime:"2024-06-04T18:16:35.094618"})--(ph2:PhoneNumber)
         with collect(ph1.phone_number) as pho1
         unwind pho1 as phone1
         return distinct phone1`,
