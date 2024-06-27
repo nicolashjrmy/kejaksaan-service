@@ -15,7 +15,6 @@ export function formatResponse(records: any[]): any {
         const endNode = segment.end;
         const relationship = segment.relationship;
 
-        // Add start node if it doesn't exist
         if (!nodes.has(startNode.elementId)) {
           nodes.set(startNode.elementId, {
             id: startNode.elementId,
@@ -24,7 +23,6 @@ export function formatResponse(records: any[]): any {
           });
         }
 
-        // Add end node if it doesn't exist
         if (!nodes.has(endNode.elementId)) {
           nodes.set(endNode.elementId, {
             id: endNode.elementId,
@@ -33,7 +31,6 @@ export function formatResponse(records: any[]): any {
           });
         }
 
-        // Add relationship
         edges.push({
           id: relationship.elementId,
           from: relationship.startNodeElementId,
