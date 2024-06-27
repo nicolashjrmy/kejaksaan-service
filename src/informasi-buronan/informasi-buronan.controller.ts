@@ -112,7 +112,9 @@ export class InformasiBuronanController {
         unwind pho1 as phone1
         return distinct phone1`,
     );
-    return result.records.map((record) => record.get('p').properties);
+    return result.records.map((record) => ({
+      Telfon: record.get('phone1'),
+    }));
   }
 
   @Get('analysis')
