@@ -58,7 +58,7 @@ export class InformasiBuronanController {
   async getWebsite() {
     const result = await this.neo4jService.read(
       `match (we:Website)
-        where we.content contains $neodash_email1
+        where we.content contains 'harunmasiku@example.com'
         return we.url,we.content`,
     );
     return result.records.map((record) => ({
