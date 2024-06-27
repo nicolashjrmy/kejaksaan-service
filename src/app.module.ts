@@ -5,6 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { JaringanBuronanController } from './jaringan-buronan/jaringan-buronan.controller';
+import { InformasiBuronanController } from './informasi-buronan/informasi-buronan.controller';
 
 @Module({
   imports: [
@@ -17,7 +19,11 @@ import { UserModule } from './user/user.module';
     AuthModule,
     UserModule,
   ],
-  controllers: [AppController],
+  controllers: [
+    AppController,
+    JaringanBuronanController,
+    InformasiBuronanController,
+  ],
   providers: [AppService, Neo4jService],
 })
 export class AppModule {}
