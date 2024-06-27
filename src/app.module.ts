@@ -12,7 +12,7 @@ import { UserModule } from './user/user.module';
       'neo4j://192.168.18.16:7687',
       'neo4j',
       'Ddi12345!',
-      'jamintel2',
+      'jamintel1',
     ),
     AuthModule,
     UserModule,
