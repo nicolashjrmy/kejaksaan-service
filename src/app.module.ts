@@ -5,11 +5,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { JaringanBuronanController } from './jaringan-buronan/jaringan-buronan.controller';
-import { InformasiBuronanController } from './informasi-buronan/informasi-buronan.controller';
-import { WiretappingController } from './wiretapping/wiretapping.controller';
-import { SocialMediaController } from './social-media/social-media.controller';
-import { TextAnalysisController } from './text-analysis/text-analysis.controller';
+import { JaringanBuronanController } from './routes/jaringan-buronan/jaringan-buronan.controller';
+import { InformasiBuronanController } from './routes/informasi-buronan/informasi-buronan.controller';
+import { WiretappingController } from './routes/wiretapping/wiretapping.controller';
+import { SocialMediaController } from './routes/social-media/social-media.controller';
+import { TextAnalysisController } from './routes/text-analysis/text-analysis.controller';
 
 @Module({
   imports: [
