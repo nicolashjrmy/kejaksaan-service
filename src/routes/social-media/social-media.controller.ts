@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
-@Controller('api/social-media')
+@Controller('social-media')
 export class SocialMediaController {}

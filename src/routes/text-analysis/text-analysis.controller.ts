@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
-@Controller('api/text-analysis')
+@Controller('text-analysis')
 export class TextAnalysisController {}

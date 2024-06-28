@@ -4,7 +4,7 @@ import { formatResponse } from 'src/neo4j/neo4j.utils';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 
 @UseGuards(JwtAuthGuard)
-@Controller('api/informasi-buronan')
+@Controller('informasi-buronan')
 export class InformasiBuronanController {
   constructor(private readonly neo4jService: Neo4jService) {}
 
