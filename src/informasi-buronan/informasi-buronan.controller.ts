@@ -107,7 +107,7 @@ export class InformasiBuronanController {
   @Get('phone-call')
   async getPhonecall() {
     const result = await this.neo4jService.read(
-      `MATCH p1=(ph1:PhoneNumber)--(a:Call)-[r:TIMELINE]->(b:Call{dateTime:"2024-06-04T18:16:35.094618"})--(ph2:PhoneNumber)
+      `MATCH p1=(ph1:PhoneNumber)--(a:Call)-[r:TIMELINE]->(b:Call_Suspicious{dateTime:"2020-12-19"})--(ph2:PhoneNumber)
         with collect(ph1.phone_number) as pho1
         unwind pho1 as phone1
         return distinct phone1`,
@@ -132,7 +132,7 @@ export class InformasiBuronanController {
   @Get('graph-profil-buron')
   async getGraphProfilBuron() {
     const result = await this.neo4jService.read(
-      `MATCH p=(:Buronan)--() RETURN p LIMIT 25`,
+      `MATCH p=(:Buronan)--() RETURN p LIMIT 10`,
     );
     const formatResult = formatResponse(result.records);
     return formatResult;

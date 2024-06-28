@@ -7,6 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { JaringanBuronanController } from './jaringan-buronan/jaringan-buronan.controller';
 import { InformasiBuronanController } from './informasi-buronan/informasi-buronan.controller';
+import { WiretappingController } from './wiretapping/wiretapping.controller';
+import { SocialMediaController } from './social-media/social-media.controller';
+import { TextAnalysisController } from './text-analysis/text-analysis.controller';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { InformasiBuronanController } from './informasi-buronan/informasi-burona
     AppController,
     JaringanBuronanController,
     InformasiBuronanController,
+    WiretappingController,
+    SocialMediaController,
+    TextAnalysisController,
   ],
   providers: [AppService, Neo4jService],
 })
