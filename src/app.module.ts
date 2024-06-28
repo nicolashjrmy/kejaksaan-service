@@ -10,6 +10,8 @@ import { InformasiBuronanController } from './routes/informasi-buronan/informasi
 import { WiretappingController } from './routes/wiretapping/wiretapping.controller';
 import { SocialMediaController } from './routes/social-media/social-media.controller';
 import { TextAnalysisController } from './routes/text-analysis/text-analysis.controller';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -21,6 +23,9 @@ import { TextAnalysisController } from './routes/text-analysis/text-analysis.con
     ),
     AuthModule,
     UserModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
+    }),
   ],
   controllers: [
     AppController,
