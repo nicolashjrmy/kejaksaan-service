@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
-@Controller('wiretapping')
+@Controller('api/wiretapping')
 export class WiretappingController {}

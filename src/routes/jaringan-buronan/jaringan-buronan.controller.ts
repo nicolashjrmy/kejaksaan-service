@@ -4,7 +4,7 @@ import { formatResponse } from 'src/neo4j/neo4j.utils';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
-@Controller('jaringan-buronan')
+@Controller('api/jaringan-buronan')
 export class JaringanBuronanController {
   constructor(private readonly neo4jService: Neo4jService) {}
 
