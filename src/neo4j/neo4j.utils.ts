@@ -53,6 +53,7 @@ export function formatResponse(records: any[]): any {
               properties: startNode.properties,
               icon: meta.node_icon[label],
               color: meta.node_color[label],
+              title: startNode.labels,
             });
           }
         });
@@ -65,6 +66,7 @@ export function formatResponse(records: any[]): any {
               properties: endNode.properties,
               icon: meta.node_icon[label],
               color: meta.node_color[label],
+              title: startNode.labels,
             });
           }
         });
@@ -73,7 +75,7 @@ export function formatResponse(records: any[]): any {
           id: relationship.elementId,
           from: relationship.startNodeElementId,
           to: relationship.endNodeElementId,
-          label: relationship.type,
+          // label: relationship.type,
           properties: relationship.properties,
         });
       });
