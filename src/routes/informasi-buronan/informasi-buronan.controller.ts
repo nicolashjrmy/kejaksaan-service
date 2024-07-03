@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards, Param } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { formatResponse } from 'src/neo4j/neo4j.utils';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
@@ -140,7 +140,7 @@ export class InformasiBuronanController {
   }
 
   @Get('graph-profil-buron/expand-list/:id')
-  async getGraphProfilBuronExpandList(id) {
+  async getGraphProfilBuronExpandList(@Param('id') id: string) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
       where elementId(n) = ${id}
@@ -153,7 +153,10 @@ export class InformasiBuronanController {
   }
 
   @Get('graph-profil-buron/expand/:id/:rel')
-  async getGraphProfilBuronExpand(id, rel) {
+  async getGraphProfilBuronExpand(
+    @Param('id') id: string,
+    @Param('rel') rel: string,
+  ) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
       where elementId(n) = "${id}" and type(r) = "${rel}" 
