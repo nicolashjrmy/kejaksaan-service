@@ -2,8 +2,9 @@ import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { formatResponse } from 'src/neo4j/neo4j.utils';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
+import { Relationship } from 'neo4j-driver';
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('informasi-buronan')
 export class InformasiBuronanController {
   constructor(private readonly neo4jService: Neo4jService) {}
@@ -138,11 +139,25 @@ export class InformasiBuronanController {
     return formatResult;
   }
 
-  @Get('graph-profil-buronan/expand')
-  async getGraphProfilBuronExpand(label, id, rel, node_filter) {
+  @Get('graph-profil-buron/expand-list')
+  async getGraphProfilBuronExpandList(id) {
     const result = await this.neo4jService.read(
-      `MATCH p=(a)-[:PUNYA_SOSMED]->()
-        RETURN p LIMIT 25`,
+      `match p = (n)-[r]-()
+      where elementId(n) = ${id}
+      return type(r), count(r)`,
+    );
+    return result.records.map((record) => ({
+      Relationship: record.get('type(r)'),
+      Jumlah: record.get('count(r)'),
+    }));
+  }
+
+  @Get('graph-profil-buron/expand')
+  async getGraphProfilBuronExpand(id, rel) {
+    const result = await this.neo4jService.read(
+      `match p = (n)-[r]-()
+      where elementId(n) = "${id}" and type(r) = "${rel}" 
+      return p`,
     );
     const formatResult = formatResponse(result.records);
     return formatResult;
