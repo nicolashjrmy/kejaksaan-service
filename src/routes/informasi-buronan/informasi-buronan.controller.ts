@@ -147,7 +147,7 @@ export class InformasiBuronanController {
       return type(r), count(r)`,
     );
     return result.records.map((record) => ({
-      Relationship: record.get('type(r)').low,
+      Relationship: record.get('type(r)'),
       Jumlah: record.get('count(r)').low,
     }));
   }
