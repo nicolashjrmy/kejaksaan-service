@@ -143,7 +143,7 @@ export class InformasiBuronanController {
   async getGraphProfilBuronExpandList(@Param('id') id: string) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
-      where elementId(n) = ${id}
+      where elementId(n) = "${id}"
       return type(r), count(r)`,
     );
     return result.records.map((record) => ({
