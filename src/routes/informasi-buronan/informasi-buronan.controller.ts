@@ -3,7 +3,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { formatResponse } from 'src/neo4j/neo4j.utils';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('informasi-buronan')
 export class InformasiBuronanController {
   constructor(private readonly neo4jService: Neo4jService) {}
@@ -133,6 +133,16 @@ export class InformasiBuronanController {
   async getGraphProfilBuron() {
     const result = await this.neo4jService.read(
       `MATCH p=(:Buronan)--() RETURN p LIMIT 10`,
+    );
+    const formatResult = formatResponse(result.records);
+    return formatResult;
+  }
+
+  @Get('graph-profil-buronan/expand')
+  async getGraphProfilBuronExpand(label, id, rel, node_filter) {
+    const result = await this.neo4jService.read(
+      `MATCH p=(a)-[:PUNYA_SOSMED]->()
+        RETURN p LIMIT 25`,
     );
     const formatResult = formatResponse(result.records);
     return formatResult;
