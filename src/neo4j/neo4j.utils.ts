@@ -18,16 +18,16 @@ const meta = {
     Keluarga: '/keluarga.svg',
   },
   node_color: {
-    Buronan: '#FF0000',
-    TTL: '#FFA500',
-    NIK: '#FFFF00',
-    NPWP: '#008000',
-    KK: '#00FFFF',
-    NO_REKENING: '#0000FF',
-    NO_CC: '#800080',
-    NO_HP: '#FFC0CB',
-    EMAIL: '#A52A2A',
-    Keluarga: '#808080',
+    Buronan: '#FFB3B3',
+    TTL: '#FFD9B3',
+    NIK: '#FFFFB3',
+    NPWP: '#B3FFB3',
+    KK: '#B3FFFF',
+    NO_REKENING: '#B3B3FF',
+    NO_CC: '#E6B3E6',
+    NO_HP: '#FFE6F2',
+    EMAIL: '#D9B3B3',
+    Keluarga: '#FFB3FF',
   },
 };
 
@@ -76,7 +76,7 @@ export function formatResponse(records: any[]): any {
           from: relationship.startNodeElementId,
           to: relationship.endNodeElementId,
           // label: relationship.type,
-          properties: relationship.properties,
+          // properties: relationship.properties,
         });
       });
     });
