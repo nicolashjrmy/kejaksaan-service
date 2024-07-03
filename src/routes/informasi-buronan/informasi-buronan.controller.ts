@@ -139,7 +139,7 @@ export class InformasiBuronanController {
     return formatResult;
   }
 
-  @Get('graph-profil-buron/expand-list')
+  @Get('graph-profil-buron/expand-list/:id')
   async getGraphProfilBuronExpandList(id) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
@@ -152,7 +152,7 @@ export class InformasiBuronanController {
     }));
   }
 
-  @Get('graph-profil-buron/expand')
+  @Get('graph-profil-buron/expand/:id/:rel')
   async getGraphProfilBuronExpand(id, rel) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
