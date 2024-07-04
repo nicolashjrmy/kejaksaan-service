@@ -84,13 +84,12 @@ export function formatResponse(records: any[]): any {
               });
 
               if (relationship) {
-                // Check if the edge with this id already exists
                 if (!edges.has(relationship.elementId)) {
                   edges.set(relationship.elementId, {
                     id: relationship.elementId,
                     from: relationship.startNodeElementId,
                     to: relationship.endNodeElementId,
-                    // label: relationship.type,
+                    label: relationship.type,
                     // properties: relationship.properties,
                   });
                 }
