@@ -134,6 +134,18 @@ export class InformasiBuronanController {
     }));
   }
 
+  @Get('kontak_KT')
+  async getKontakKT() {
+    const result = await this.neo4jService.read(
+      `MATCH (n: Kaki_Tangan)
+        return n.phone_number as nomor, n.provider as provider`,
+    );
+    return result.records.map((record) => ({
+      Kontak: record.get('kontak'),
+      Provider: record.get('provider'),
+    }));
+  }
+
   @Get('email')
   async getEmail() {
     const result = await this.neo4jService.read(
@@ -168,7 +180,7 @@ export class InformasiBuronanController {
     }));
   }
 
-  @Get('data-ccty')
+  @Get('data-cctv')
   async getDataCctv(
     @Param('nama_buron') nama_buron: string,
     @Param('start_date') start_date: any,

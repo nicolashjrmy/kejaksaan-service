@@ -16,7 +16,7 @@ import { join } from 'path';
 @Module({
   imports: [
     Neo4jModule.forRoot(
-      'neo4j://182.253.253.96:7687',
+      'neo4j://192.168.18.16:7687',
       'neo4j',
       'Ddi12345!',
       'jamintel1',
