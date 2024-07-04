@@ -37,7 +37,7 @@ const meta = {
 
 export function formatResponse(records: any[]): any {
   const nodes = new Map();
-  const edges = [];
+  const edges = new Map<string, any>();
 
   records.forEach((record) => {
     if (record && record._fields) {
@@ -84,13 +84,16 @@ export function formatResponse(records: any[]): any {
               });
 
               if (relationship) {
-                edges.push({
-                  id: relationship.elementId,
-                  from: relationship.startNodeElementId,
-                  to: relationship.endNodeElementId,
-                  // label: relationship.type,
-                  // properties: relationship.properties,
-                });
+                // Check if the edge with this id already exists
+                if (!edges.has(relationship.elementId)) {
+                  edges.set(relationship.elementId, {
+                    id: relationship.elementId,
+                    from: relationship.startNodeElementId,
+                    to: relationship.endNodeElementId,
+                    // label: relationship.type,
+                    // properties: relationship.properties,
+                  });
+                }
               }
             }
           });
@@ -98,6 +101,7 @@ export function formatResponse(records: any[]): any {
       });
     }
   });
+  const uniqueEdges = Array.from(edges.values());
 
-  return { nodes: Array.from(nodes.values()), edges, meta };
+  return { nodes: Array.from(nodes.values()), edges: uniqueEdges, meta };
 }
