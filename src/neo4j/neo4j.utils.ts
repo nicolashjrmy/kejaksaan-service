@@ -16,7 +16,7 @@ const meta = {
     NO_HP: '/nohp.svg',
     EMAIL: '/email.svg',
     Keluarga: '/keluarga.svg',
-    Contact_Phone: '/nohp.svg',
+    // Contact_Phone: '/nohp.svg',
     Transaction_Mutation: '/nocc.svg',
   },
   node_color: {
@@ -30,8 +30,8 @@ const meta = {
     NO_HP: '#FFE6F2',
     EMAIL: '#D9B3B3',
     Keluarga: '#FFB3FF',
-    Contact_Phone: '/nohp.svg',
-    Transaction_Mutation: '/nocc.svg',
+    // Contact_Phone: '#B3FFB3',
+    Transaction_Mutation: '#FFE6F2',
   },
 };
 
