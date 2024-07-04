@@ -230,7 +230,7 @@ export class InformasiBuronanController {
        WITH collect(p1) + collect(p2) + collect(p4) + collect(p5) + collect(p7) + collect(p8) AS p
        return p LIMIT 100`,
     );
-    console.log(result);
+    console.log(result.records);
     const formatResult = formatResponse(result.records);
     return formatResult;
   }
