@@ -42,34 +42,48 @@ export function formatResponse(records: any[]): any {
   const nodes = new Map();
   const edges = [];
 
-  records.forEach((record) => {
-    if (!record._fields || !Array.isArray(record._fields)) {
-      console.error('record._fields is not an array', record._fields);
-      return;
+  for (const record of records) {
+    if (!record || !record._fields || !Array.isArray(record._fields)) {
+      console.error('Invalid record:', record);
+      continue;
     }
 
-    record._fields.forEach((_field) => {
-      if (!_field.segments || !Array.isArray(_field.segments)) {
-        console.error('_field.segments is not an array', _field.segments);
-        return;
+    for (const _field of record._fields) {
+      if (!_field || !_field.segments || !Array.isArray(_field.segments)) {
+        console.error('Invalid _field:', _field);
+        continue;
       }
 
-      _field.segments.forEach((segment) => {
+      for (const segment of _field.segments) {
+        if (
+          !segment ||
+          !segment.start ||
+          !segment.end ||
+          !segment.relationship
+        ) {
+          console.error('Invalid segment:', segment);
+          continue;
+        }
+
         const startNode = segment.start;
         const endNode = segment.end;
         const relationship = segment.relationship;
 
-        if (!startNode.labels || !Array.isArray(startNode.labels)) {
-          console.error('startNode.labels is not an array', startNode.labels);
-          return;
+        if (
+          !startNode.labels ||
+          !Array.isArray(startNode.labels) ||
+          !endNode.labels ||
+          !Array.isArray(endNode.labels)
+        ) {
+          console.error(
+            'Invalid node labels:',
+            startNode.labels,
+            endNode.labels,
+          );
+          continue;
         }
 
-        if (!endNode.labels || !Array.isArray(endNode.labels)) {
-          console.error('endNode.labels is not an array', endNode.labels);
-          return;
-        }
-
-        startNode.labels.forEach((label: string) => {
+        for (const label of startNode.labels) {
           if (!nodes.has(startNode.elementId)) {
             nodes.set(startNode.elementId, {
               id: startNode.elementId,
@@ -80,9 +94,9 @@ export function formatResponse(records: any[]): any {
               title: startNode.labels,
             });
           }
-        });
+        }
 
-        endNode.labels.forEach((label: string) => {
+        for (const label of endNode.labels) {
           if (!nodes.has(endNode.elementId)) {
             nodes.set(endNode.elementId, {
               id: endNode.elementId,
@@ -90,10 +104,10 @@ export function formatResponse(records: any[]): any {
               properties: endNode.properties,
               icon: meta.node_icon[label],
               color: meta.node_color[label],
-              title: startNode.labels,
+              title: endNode.labels,
             });
           }
-        });
+        }
 
         edges.push({
           id: relationship.elementId,
@@ -102,9 +116,9 @@ export function formatResponse(records: any[]): any {
           // label: relationship.type,
           // properties: relationship.properties,
         });
-      });
-    });
-  });
+      }
+    }
+  }
 
   return { nodes: Array.from(nodes.values()), edges, meta };
 }
