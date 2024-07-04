@@ -36,93 +36,59 @@ const meta = {
 };
 
 export function formatResponse(records: any[]): any {
-  if (!records || !Array.isArray(records)) {
-    return { nodes: [], edges: [], meta };
-  }
   const nodes = new Map();
   const edges = [];
 
-  for (const record of records) {
-    if (!record || !record._fields || !Array.isArray(record._fields)) {
-      console.error('Invalid record:', record);
-      continue;
-    }
+  records.forEach((record) => {
+    record._fields.forEach((_field) => {
+      if (_field !== null) {
+        // Check for null value
+        _field.segments.forEach((segment) => {
+          const startNode = segment.start;
+          const endNode = segment.end;
+          const relationship = segment.relationship;
 
-    for (const _field of record._fields) {
-      if (!_field) {
-        console.error('Invalid _field (null):', _field);
-        continue;
-      }
-      if (!_field.segments || !Array.isArray(_field.segments)) {
-        console.error('Invalid _field.segments:', _field.segments);
-        continue;
-      }
+          const startNodeLabels = startNode.labels;
+          const endNodeLabels = endNode.labels;
 
-      for (const segment of _field.segments) {
-        if (
-          !segment ||
-          !segment.start ||
-          !segment.end ||
-          !segment.relationship
-        ) {
-          console.error('Invalid segment:', segment);
-          continue;
-        }
+          startNodeLabels.forEach((label: string) => {
+            if (!nodes.has(startNode.elementId)) {
+              nodes.set(startNode.elementId, {
+                id: startNode.elementId,
+                label: startNode.labels,
+                properties: startNode.properties,
+                icon: meta.node_icon[label],
+                color: meta.node_color[label],
+                title: startNode.labels,
+              });
+            }
+          });
 
-        const startNode = segment.start;
-        const endNode = segment.end;
-        const relationship = segment.relationship;
+          endNodeLabels.forEach((label: string) => {
+            if (!nodes.has(endNode.elementId)) {
+              nodes.set(endNode.elementId, {
+                id: endNode.elementId,
+                label: endNode.labels,
+                properties: endNode.properties,
+                icon: meta.node_icon[label],
+                color: meta.node_color[label],
+                title: startNode.labels,
+              });
+            }
+          });
 
-        if (
-          !startNode.labels ||
-          !Array.isArray(startNode.labels) ||
-          !endNode.labels ||
-          !Array.isArray(endNode.labels)
-        ) {
-          console.error(
-            'Invalid node labels:',
-            startNode.labels,
-            endNode.labels,
-          );
-          continue;
-        }
-
-        for (const label of startNode.labels) {
-          if (!nodes.has(startNode.identity)) {
-            nodes.set(startNode.identity, {
-              id: startNode.identity,
-              label: startNode.labels,
-              properties: startNode.properties,
-              icon: meta.node_icon[label],
-              color: meta.node_color[label],
-              title: startNode.labels,
-            });
-          }
-        }
-
-        for (const label of endNode.labels) {
-          if (!nodes.has(endNode.identity)) {
-            nodes.set(endNode.identity, {
-              id: endNode.identity,
-              label: endNode.labels,
-              properties: endNode.properties,
-              icon: meta.node_icon[label],
-              color: meta.node_color[label],
-              title: endNode.labels,
-            });
-          }
-        }
-
-        edges.push({
-          id: relationship.identity,
-          from: relationship.start,
-          to: relationship.end,
-          // label: relationship.type,
-          // properties: relationship.properties,
+          edges.push({
+            id: relationship.elementId,
+            from: relationship.startNodeElementId,
+            to: relationship.endNodeElementId,
+            // Uncomment these if you want to include relationship details
+            // label: relationship.type,
+            // properties: relationship.properties,
+          });
         });
       }
-    }
-  }
+    });
+  });
 
   return { nodes: Array.from(nodes.values()), edges, meta };
 }
