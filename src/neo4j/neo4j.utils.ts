@@ -36,6 +36,9 @@ const meta = {
 };
 
 export function formatResponse(records: any[]): any {
+  if (!records || !Array.isArray(records)) {
+    return { nodes: [], edges: [], meta };
+  }
   const nodes = new Map();
   const edges = [];
 
