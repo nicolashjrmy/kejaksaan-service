@@ -64,17 +64,17 @@ export class InformasiBuronanController {
     }));
   }
 
-  @Get('analysis')
-  async getAnalysis() {
-    const result = await this.neo4jService.read(
-      `MATCH p1=()--(a)-[r:TIMELINE]->(b)--()
-        with p1,a,b,
-        case when $neodash_custom1='' then b.dateTime else $neodash_custom1 end as rule1
-        where none(z in nodes(p1) where z:Post) and b.dateTime=rule1
-        RETURN p1`,
-    );
-    return result.records.map((record) => record.get('p').properties);
-  }
+  // @Get('analysis')
+  // async getAnalysis() {
+  //   const result = await this.neo4jService.read(
+  //     `MATCH p1=()--(a)-[r:TIMELINE]->(b)--()
+  //       with p1,a,b,
+  //       case when $neodash_custom1='' then b.dateTime else $neodash_custom1 end as rule1
+  //       where none(z in nodes(p1) where z:Post) and b.dateTime=rule1
+  //       RETURN p1`,
+  //   );
+  //   return result.records.map((record) => record.get('p').properties);
+  // }
 
   @Get('startdate')
   async getStartDate() {
@@ -167,7 +167,7 @@ export class InformasiBuronanController {
   ) {
     const result = await this.neo4jService.read(
       `match (a:Buronan{nama:"${nama_buron}"})-[:PUNYA_HP]->(b:NO_HP)-[:HAS_CONTACT_PHONE]->(c:Contact_Phone)
-      where ${start_date} <= c.dateTime <= ${end_date}
+      where "${start_date}" <= c.dateTime <= "${end_date}"
       and
       b.no_hp[0]="${no_hp}" or b.no_hp[1]="${no_hp}"
       return  c.added_date as Tanggal_Ditambah, c.number as No_Kontak, c.provider as Provider
@@ -187,7 +187,7 @@ export class InformasiBuronanController {
     @Param('end_date') end_date: any,
   ) {
     const result = await this.neo4jService.read(
-      `MATCH (n:CCTVData {buronan:"${nama_buron}"} where ${start_date} <= n.dateTime <= ${end_date}) 
+      `MATCH (n:CCTVData {buronan:"${nama_buron}"} where "${start_date}" <= n.dateTime <= "${end_date}") 
       where n.city ='Medan' or n.city='Balikpapan' or n.city='Makassar'
       RETURN
       n.recorded_date as Tanggal,
@@ -211,8 +211,8 @@ export class InformasiBuronanController {
     @Param('nik') nik: string,
     @Param('no_hp') no_hp: string,
     @Param('no_rek') no_rek: string,
-    @Param('start_date') start_date: any,
-    @Param('end_date') end_date: any,
+    @Param('start_date') start_date: string,
+    @Param('end_date') end_date: string,
     @Param('email') email: string,
     @Param('n_kontak1') n_kontak1: string,
     @Param('tgl_cctv') tgl_cctv: string,
@@ -223,8 +223,8 @@ export class InformasiBuronanController {
        optional match p3=(bu1)-[]->(n2:NO_HP where n2.no_hp[1]="${no_hp}")
        optional match p4=(bu1)-[]->(:NO_REKENING{no_rekening:"${no_rek}"})
        optional match p5=(bu1)-[]->(:EMAIL{email:"${email}"})
-       optional match p6=(a1)-[:PUNYA_HP]->(b1:NO_HP)-[:HAS_CONTACT_PHONE]->(c1:Contact_Phone where ${start_date} <= toString(c1.dateTime) <= ${end_date} and b1.no_hp[0]="${no_hp}" or b1.no_hp[1]="${no_hp}") 
-       optional match p7=(a1{no_rekening:"${no_rek}"})-[r2:HAS_TX_MUTATION]->(b2:Transaction_Mutation where ${start_date} <= b2.dateTime <= ${end_date}) 
+       optional match p6=(a1)-[:PUNYA_HP]->(b1:NO_HP)-[:HAS_CONTACT_PHONE]->(c1:Contact_Phone where "${start_date}" <= toString(c1.dateTime) <= "${end_date}" and b1.no_hp[0]="${no_hp}" or b1.no_hp[1]="${no_hp}") 
+       optional match p7=(a1{no_rekening:"${no_rek}"})-[r2:HAS_TX_MUTATION]->(b2:Transaction_Mutation where "${start_date}" <= b2.dateTime <= "${end_date}") 
        optional match p8=(c1)--(n:Kaki_Tangan{phone_number:"${n_kontak1}"})-[]-(:Call_Suspicious)
        optional match p9=(bu1)-[:TERTANGKAP_CCTV]->(:CCTVData{recorded_date:"${tgl_cctv}"})
        WITH collect(p1) + collect(p2) + collect(p3) + collect(p4) + collect(p5) + collect(p6) + collect(p7) + collect(p8) + collect(p9) AS p
