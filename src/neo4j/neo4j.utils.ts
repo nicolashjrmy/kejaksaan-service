@@ -43,16 +43,33 @@ export function formatResponse(records: any[]): any {
   const edges = [];
 
   records.forEach((record) => {
+    if (!record._fields || !Array.isArray(record._fields)) {
+      console.error('record._fields is not an array', record._fields);
+      return;
+    }
+
     record._fields.forEach((_field) => {
+      if (!_field.segments || !Array.isArray(_field.segments)) {
+        console.error('_field.segments is not an array', _field.segments);
+        return;
+      }
+
       _field.segments.forEach((segment) => {
         const startNode = segment.start;
         const endNode = segment.end;
         const relationship = segment.relationship;
 
-        const startNodeLabels = startNode.labels;
-        const endNodeLabels = endNode.labels;
+        if (!startNode.labels || !Array.isArray(startNode.labels)) {
+          console.error('startNode.labels is not an array', startNode.labels);
+          return;
+        }
 
-        startNodeLabels.forEach((label: string) => {
+        if (!endNode.labels || !Array.isArray(endNode.labels)) {
+          console.error('endNode.labels is not an array', endNode.labels);
+          return;
+        }
+
+        startNode.labels.forEach((label: string) => {
           if (!nodes.has(startNode.elementId)) {
             nodes.set(startNode.elementId, {
               id: startNode.elementId,
@@ -65,7 +82,7 @@ export function formatResponse(records: any[]): any {
           }
         });
 
-        endNodeLabels.forEach((label: string) => {
+        endNode.labels.forEach((label: string) => {
           if (!nodes.has(endNode.elementId)) {
             nodes.set(endNode.elementId, {
               id: endNode.elementId,
