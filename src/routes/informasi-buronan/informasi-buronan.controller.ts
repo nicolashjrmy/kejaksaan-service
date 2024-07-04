@@ -226,8 +226,7 @@ export class InformasiBuronanController {
        optional match p6=(a1)-[:PUNYA_HP]->(b1:NO_HP)-[:HAS_CONTACT_PHONE]->(c1:Contact_Phone where "${start_date}" <= toString(c1.dateTime) <= "${end_date}" and b1.no_hp[0]="${no_hp}" or b1.no_hp[1]="${no_hp}") 
        optional match p7=(a1{no_rekening:"${no_rek}"})-[r2:HAS_TX_MUTATION]->(b2:Transaction_Mutation where "${start_date}" <= b2.dateTime <= "${end_date}") 
        optional match p8=(c1)--(n:Kaki_Tangan{phone_number:"${n_kontak1}"})-[]-(:Call_Suspicious)
-       optional match p9=(bu1)-[:TERTANGKAP_CCTV]->(:CCTVData{recorded_date:"${tgl_cctv}"})
-       return collect([p1,p2,p3,p4,p5,p6,p7,p8,p9]) as p LIMIT 100`,
+       return collect([p1,p2,p3,p4,p5,p6,p7,p8]) as p LIMIT 100`,
     );
     console.log(result.records);
     const formatResult = formatResponse(result.records);
