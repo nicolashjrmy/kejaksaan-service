@@ -40,50 +40,63 @@ export function formatResponse(records: any[]): any {
   const edges = [];
 
   records.forEach((record) => {
-    record._fields.forEach((_field) => {
-      _field.segments.forEach((segment) => {
-        const startNode = segment.start;
-        const endNode = segment.end;
-        const relationship = segment.relationship;
+    if (record && record._fields) {
+      record._fields.forEach((_field) => {
+        if (_field && _field.segments) {
+          _field.segments.forEach((segments) => {
+            if (
+              segments &&
+              segments.start &&
+              segments.end &&
+              segments.relationship
+            ) {
+              const startNode = segments.start;
+              const endNode = segments.end;
+              const relationship = segments.relationship;
 
-        const startNodeLabels = startNode.labels;
-        const endNodeLabels = endNode.labels;
+              const startNodeLabels = startNode.labels || [];
+              const endNodeLabels = endNode.labels || [];
 
-        startNodeLabels.forEach((label: string) => {
-          if (!nodes.has(startNode.elementId)) {
-            nodes.set(startNode.elementId, {
-              id: startNode.elementId,
-              label: startNode.labels,
-              properties: startNode.properties,
-              icon: meta.node_icon[label],
-              color: meta.node_color[label],
-              title: startNode.labels,
-            });
-          }
-        });
+              startNodeLabels.forEach((label: string) => {
+                if (startNode && !nodes.has(startNode.elementId)) {
+                  nodes.set(startNode.elementId, {
+                    id: startNode.elementId,
+                    label: startNodeLabels,
+                    properties: startNode.properties,
+                    icon: meta.node_icon[label],
+                    color: meta.node_color[label],
+                    title: label,
+                  });
+                }
+              });
 
-        endNodeLabels.forEach((label: string) => {
-          if (!nodes.has(endNode.elementId)) {
-            nodes.set(endNode.elementId, {
-              id: endNode.elementId,
-              label: endNode.labels,
-              properties: endNode.properties,
-              icon: meta.node_icon[label],
-              color: meta.node_color[label],
-              title: startNode.labels,
-            });
-          }
-        });
+              endNodeLabels.forEach((label: string) => {
+                if (endNode && !nodes.has(endNode.elementId)) {
+                  nodes.set(endNode.elementId, {
+                    id: endNode.elementId,
+                    label: endNodeLabels,
+                    properties: endNode.properties,
+                    icon: meta.node_icon[label],
+                    color: meta.node_color[label],
+                    title: label,
+                  });
+                }
+              });
 
-        edges.push({
-          id: relationship.elementId,
-          from: relationship.startNodeElementId,
-          to: relationship.endNodeElementId,
-          // label: relationship.type,
-          // properties: relationship.properties,
-        });
+              if (relationship) {
+                edges.push({
+                  id: relationship.elementId,
+                  from: relationship.startNodeElementId,
+                  to: relationship.endNodeElementId,
+                  label: relationship.type,
+                  properties: relationship.properties,
+                });
+              }
+            }
+          });
+        }
       });
-    });
+    }
   });
 
   return { nodes: Array.from(nodes.values()), edges, meta };

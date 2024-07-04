@@ -10,7 +10,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { formatResponse } from 'src/neo4j/neo4j.utils';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
-import { Relationship } from 'neo4j-driver';
+import { Relationship, Result } from 'neo4j-driver';
 import { log } from 'console';
 
 @UseGuards(JwtAuthGuard)
@@ -215,34 +215,32 @@ export class InformasiBuronanController {
     }));
   }
 
-  @Get('graph-profil-buron')
-  async getGraphProfilBuron() // @Body('nik') nik: string,
-  // @Body('no_hp') no_hp: string,
-  // @Body('no_rek') no_rek: string,
-  // @Body('start_date') start_date: string,
-  // @Body('end_date') end_date: string,
-  // @Body('email') email: string,
-  // @Body('n_kontak1') n_kontak1: string,
-  // @Body('tgl_cctv') tgl_cctv: string,
-  {
-    // const result = await this.neo4jService.read(
-    //   `optional match p1=(bu1:Buronan)-[]->(:NIK{nik:"${nik}"})
-    //    optional match p2=(bu1)-[]->(n1:NO_HP where n1.no_hp[0]="${no_hp}")
-    //    optional match p3=(bu1)-[]->(n2:NO_HP where n2.no_hp[1]="${no_hp}")
-    //    optional match p4=(bu1)-[]->(:NO_REKENING{no_rekening:"${no_rek}"})
-    //    optional match p5=(bu1)-[]->(:EMAIL{email:"${email}"})
-    //    optional match p6=(a1)-[:PUNYA_HP]->(b1:NO_HP)-[:HAS_CONTACT_PHONE]->(c1:Contact_Phone where "${start_date}" <= toString(c1.dateTime) <= "${end_date}" and b1.no_hp[0]="${no_hp}" or b1.no_hp[1]="${no_hp}")
-    //    optional match p7=(a1{no_rekening:"${no_rek}"})-[r2:HAS_TX_MUTATION]->(b2:Transaction_Mutation where "${start_date}" <= b2.dateTime <= "${end_date}")
-    //    optional match p8=(c1)--(n:Kaki_Tangan{phone_number:"${n_kontak1}"})-[]-(:Call_Suspicious)
-    //    return collect([p1,p2,p3,p4,p5,p6,p7,p8]) as p LIMIT 1`,
-    // );
+  @Post('graph-profil-buron')
+  async getGraphProfilBuron(
+    @Body('nik') nik: string,
+    @Body('no_hp') no_hp: string,
+    @Body('no_rek') no_rek: string,
+    @Body('start_date') start_date: string,
+    @Body('end_date') end_date: string,
+    @Body('email') email: string,
+    @Body('n_kontak1') n_kontak1: string,
+    @Body('tgl_cctv') tgl_cctv: string,
+  ) {
     const result = await this.neo4jService.read(
-      `MATCH p=(n:Buronan)-[]-()
-         RETURN p limit 25`,
+      `optional match p1=(bu1:Buronan)-[]->(:NIK{nik:"${nik}"})
+       optional match p2=(bu1)-[]->(n1:NO_HP where n1.no_hp[0]="${no_hp}")
+       optional match p3=(bu1)-[]->(n2:NO_HP where n2.no_hp[1]="${no_hp}")
+       optional match p4=(bu1)-[]->(:NO_REKENING{no_rekening:"${no_rek}"})
+       optional match p5=(bu1)-[]->(:EMAIL{email:"${email}"})
+       optional match p6=(a1)-[:PUNYA_HP]->(b1:NO_HP)-[:HAS_CONTACT_PHONE]->(c1:Contact_Phone where "${start_date}" <= toString(c1.dateTime) <= "${end_date}" and b1.no_hp[0]="${no_hp}" or b1.no_hp[1]="${no_hp}")
+       optional match p7=(a1{no_rekening:"${no_rek}"})-[r2:HAS_TX_MUTATION]->(b2:Transaction_Mutation where "${start_date}" <= b2.dateTime <= "${end_date}")
+       optional match p8=(c1)--(n:Kaki_Tangan{phone_number:"${n_kontak1}"})-[]-(:Call_Suspicious)
+       return p1,p2,p3,p4,p5,p6,p7,p8`,
     );
     // console.log(result.records);
     const formatResult = formatResponse(result.records);
     return formatResult;
+    // return result.records;
   }
 
   @Get('graph-profil-buron/expand-list/:id')
