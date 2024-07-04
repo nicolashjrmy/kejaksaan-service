@@ -88,8 +88,8 @@ export function formatResponse(records: any[]): any {
                   id: relationship.elementId,
                   from: relationship.startNodeElementId,
                   to: relationship.endNodeElementId,
-                  label: relationship.type,
-                  properties: relationship.properties,
+                  // label: relationship.type,
+                  // properties: relationship.properties,
                 });
               }
             }
