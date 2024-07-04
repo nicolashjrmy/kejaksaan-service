@@ -22,10 +22,10 @@ import { join } from 'path';
       'jamintel1',
     ),
     AuthModule,
-    // UserModule,
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, '..', 'client', 'dist'),
-    // }),
+    UserModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', 'dist'),
+    }),
   ],
   controllers: [
     AppController,
