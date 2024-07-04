@@ -49,8 +49,12 @@ export function formatResponse(records: any[]): any {
     }
 
     for (const _field of record._fields) {
-      if (!_field || !_field.segments || !Array.isArray(_field.segments)) {
-        console.error('Invalid _field:', _field);
+      if (!_field) {
+        console.error('Invalid _field (null):', _field);
+        continue;
+      }
+      if (!_field.segments || !Array.isArray(_field.segments)) {
+        console.error('Invalid _field.segments:', _field.segments);
         continue;
       }
 
@@ -84,9 +88,9 @@ export function formatResponse(records: any[]): any {
         }
 
         for (const label of startNode.labels) {
-          if (!nodes.has(startNode.elementId)) {
-            nodes.set(startNode.elementId, {
-              id: startNode.elementId,
+          if (!nodes.has(startNode.identity)) {
+            nodes.set(startNode.identity, {
+              id: startNode.identity,
               label: startNode.labels,
               properties: startNode.properties,
               icon: meta.node_icon[label],
@@ -97,9 +101,9 @@ export function formatResponse(records: any[]): any {
         }
 
         for (const label of endNode.labels) {
-          if (!nodes.has(endNode.elementId)) {
-            nodes.set(endNode.elementId, {
-              id: endNode.elementId,
+          if (!nodes.has(endNode.identity)) {
+            nodes.set(endNode.identity, {
+              id: endNode.identity,
               label: endNode.labels,
               properties: endNode.properties,
               icon: meta.node_icon[label],
@@ -110,9 +114,9 @@ export function formatResponse(records: any[]): any {
         }
 
         edges.push({
-          id: relationship.elementId,
-          from: relationship.startNodeElementId,
-          to: relationship.endNodeElementId,
+          id: relationship.identity,
+          from: relationship.start,
+          to: relationship.end,
           // label: relationship.type,
           // properties: relationship.properties,
         });
