@@ -215,16 +215,16 @@ export class InformasiBuronanController {
     }));
   }
 
-  @Post('graph-profil-buron')
+  @Get('graph-profil-buron')
   async getGraphProfilBuron(
-    @Body('nik') nik: string,
-    @Body('no_hp') no_hp: string,
-    @Body('no_rek') no_rek: string,
-    @Body('start_date') start_date: string,
-    @Body('end_date') end_date: string,
-    @Body('email') email: string,
-    @Body('n_kontak1') n_kontak1: string,
-    @Body('tgl_cctv') tgl_cctv: string,
+    @Query('nik') nik: string,
+    @Query('no_hp') no_hp: string,
+    @Query('no_rek') no_rek: string,
+    @Query('start_date') start_date: string,
+    @Query('end_date') end_date: string,
+    @Query('email') email: string,
+    @Query('n_kontak1') n_kontak1: string,
+    @Query('tgl_cctv') tgl_cctv: string,
   ) {
     const result = await this.neo4jService.read(
       `optional match p1=(bu1:Buronan)-[]->(:NIK{nik:"${nik}"})
@@ -235,7 +235,9 @@ export class InformasiBuronanController {
        optional match p6=(a1)-[:PUNYA_HP]->(b1:NO_HP)-[:HAS_CONTACT_PHONE]->(c1:Contact_Phone where "${start_date}" <= toString(c1.dateTime) <= "${end_date}" and b1.no_hp[0]="${no_hp}" or b1.no_hp[1]="${no_hp}")
        optional match p7=(a1{no_rekening:"${no_rek}"})-[r2:HAS_TX_MUTATION]->(b2:Transaction_Mutation where "${start_date}" <= b2.dateTime <= "${end_date}")
        optional match p8=(c1)--(n:Kaki_Tangan{phone_number:"${n_kontak1}"})-[]-(:Call_Suspicious)
-       return p1,p2,p3,p4,p5,p6,p7,p8`,
+       optional match p9=(bu1)-[:TERTANGKAP_CCTV]->(:CCTVData{recorded_date:"${tgl_cctv}"})
+
+       return p1,p2,p3,p4,p5,p6,p7,p8,p9 LIMIT 100`,
     );
     // console.log(result.records);
     const formatResult = formatResponse(result.records);
@@ -244,7 +246,7 @@ export class InformasiBuronanController {
   }
 
   @Get('graph-profil-buron/expand-list/:id')
-  async getGraphProfilBuronExpandList(@Param('id') id: string) {
+  async getGraphProfilBuronExpandList(@Query('id') id: string) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
       where elementId(n) = "${id}"
@@ -258,8 +260,8 @@ export class InformasiBuronanController {
 
   @Get('graph-profil-buron/expand/:id/:rel')
   async getGraphProfilBuronExpand(
-    @Param('id') id: string,
-    @Param('rel') rel: string,
+    @Query('id') id: string,
+    @Query('rel') rel: string,
   ) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()

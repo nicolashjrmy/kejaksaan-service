@@ -12,6 +12,8 @@ import { SocialMediaController } from './routes/social-media/social-media.contro
 import { TextAnalysisController } from './routes/text-analysis/text-analysis.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { GraphController } from './graph/graph.controller';
+import { PerjalananBuronanController } from './routes/perjalanan-buronan/perjalanan-buronan.controller';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { join } from 'path';
     WiretappingController,
     SocialMediaController,
     TextAnalysisController,
+    GraphController,
+    PerjalananBuronanController,
   ],
   providers: [AppService, Neo4jService],
 })
