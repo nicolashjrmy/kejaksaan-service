@@ -262,4 +262,19 @@ export class InformasiBuronanController {
           Jumlah: record.get('count(r)').low,
         }));
   }
+
+  @Get('graph-profil-buron/shortest-path')
+  async getGraphProfilBuronShortestPath(
+    @Query('id1') id1: string,
+    @Query('id2') id2: string,
+  ) {
+    const result = await this.neo4jService.read(
+      `match (n), (m)
+      where elementId(n)="${id1}" and elementId(m)= "${id2}"
+      match p = shortestPath((n)-[*]-(m))
+      return p`,
+    );
+    const formatResult = formatResponse(result.records);
+    return formatResult;
+  }
 }
