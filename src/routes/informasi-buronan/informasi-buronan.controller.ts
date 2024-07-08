@@ -253,7 +253,7 @@ export class InformasiBuronanController {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
       where elementId(n) = "${id}" ${rel != undefined ? `and type(r) = "${rel}"` : ''} 
-      return ${rel ? `p` : `type(r), count(r)`}`,
+      return ${rel ? `p LIMIT 100` : `type(r), count(r)`}`,
     );
     return id && rel
       ? formatResponse(result.records)
