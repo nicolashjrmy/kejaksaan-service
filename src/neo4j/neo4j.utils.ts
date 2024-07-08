@@ -59,7 +59,8 @@ export function formatResponse(records: any[]): any {
 
               const processProperties = (properties: any): any => {
                 const processedProperties: any = {};
-                for (const key in properties) {
+                const sortedKeys = Object.keys(properties).sort();
+                sortedKeys.forEach((key) => {
                   if (Array.isArray(properties[key])) {
                     processedProperties[key] = properties[key];
                   } else if (
@@ -76,7 +77,7 @@ export function formatResponse(records: any[]): any {
                   } else {
                     processedProperties[key] = properties[key];
                   }
-                }
+                });
                 return processedProperties;
               };
 
