@@ -16,13 +16,13 @@ const meta = {
     NO_HP: '/nohp.svg',
     EMAIL: '/email.svg',
     Keluarga: '/keluarga.svg',
-    Contact_Phone: '/nohp.svg',
+    Contact_Phone: '/contact.svg',
     Transaction_Mutation: '/nocc.svg',
   },
   node_color: {
     Buronan: '#ff3232',
     TTL: '#FFD9B3',
-    NIK: '#B3FFFF',
+    NIK: '#C90076',
     NPWP: '#B3FFB3',
     KK: '#B3FFFF',
     NO_REKENING: '#32FFFF',
@@ -31,7 +31,7 @@ const meta = {
     EMAIL: '#D9B3B3',
     Keluarga: '#1919FF',
     Contact_Phone: '#FFA500',
-    Transaction_Mutation: '#329932',
+    Transaction_Mutation: '#1919FF',
   },
 };
 
