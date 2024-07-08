@@ -245,30 +245,21 @@ export class InformasiBuronanController {
     // return result.records;
   }
 
-  @Get('graph-profil-buron/expand-list')
-  async getGraphProfilBuronExpandList(@Query('id') id: string) {
-    const result = await this.neo4jService.read(
-      `match p = (n)-[r]-()
-      where elementId(n) = "${id}"
-      return type(r), count(r)`,
-    );
-    return result.records.map((record) => ({
-      Relationship: record.get('type(r)'),
-      Jumlah: record.get('count(r)').low,
-    }));
-  }
-
   @Get('graph-profil-buron/expand')
-  async getGraphProfilBuronExpand(
+  async getGraphProfilBuronExpandList(
     @Query('id') id: string,
     @Query('rel') rel: string,
   ) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
-      where elementId(n) = "${id}" and type(r) = "${rel}" 
-      return p`,
+      where elementId(n) = "${id}" ${rel != undefined ? `and type(r) = "${rel}"` : ''} 
+      return ${rel ? `p` : `type(r), count(r)`}`,
     );
-    const formatResult = formatResponse(result.records);
-    return formatResult;
+    return id && rel
+      ? formatResponse(result.records)
+      : result.records.map((record) => ({
+          Relationship: record.get('type(r)'),
+          Jumlah: record.get('count(r)').low,
+        }));
   }
 }
