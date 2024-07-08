@@ -245,7 +245,7 @@ export class InformasiBuronanController {
     // return result.records;
   }
 
-  @Get('graph-profil-buron/expand-list/:id')
+  @Get('graph-profil-buron/expand-list')
   async getGraphProfilBuronExpandList(@Query('id') id: string) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
@@ -258,7 +258,7 @@ export class InformasiBuronanController {
     }));
   }
 
-  @Get('graph-profil-buron/expand/:id/:rel')
+  @Get('graph-profil-buron/expand')
   async getGraphProfilBuronExpand(
     @Query('id') id: string,
     @Query('rel') rel: string,

@@ -22,7 +22,7 @@ const meta = {
   node_color: {
     Buronan: '#ff3232',
     TTL: '#FFD9B3',
-    NIK: '#FFFFB3',
+    NIK: '#B3FFFF',
     NPWP: '#B3FFB3',
     KK: '#B3FFFF',
     NO_REKENING: '#32FFFF',
@@ -57,12 +57,29 @@ export function formatResponse(records: any[]): any {
               const startNodeLabels = startNode.labels || [];
               const endNodeLabels = endNode.labels || [];
 
+              const processProperties = (properties: any): any => {
+                const processedProperties: any = {};
+                for (const key in properties) {
+                  if (properties[key] && typeof properties[key] === 'object') {
+                    if ('low' in properties[key]) {
+                      processedProperties[key] = properties[key].low;
+                    } else {
+                      processedProperties[key] = processProperties(
+                        properties[key],
+                      );
+                    }
+                  } else {
+                    processedProperties[key] = properties[key];
+                  }
+                }
+                return processedProperties;
+              };
               startNodeLabels.forEach((label: string) => {
                 if (startNode && !nodes.has(startNode.elementId)) {
                   nodes.set(startNode.elementId, {
                     id: startNode.elementId,
                     label: startNodeLabels,
-                    properties: startNode.properties,
+                    properties: processProperties(startNode.properties),
                     icon: meta.node_icon[label],
                     color: meta.node_color[label],
                     title: label,
@@ -75,7 +92,7 @@ export function formatResponse(records: any[]): any {
                   nodes.set(endNode.elementId, {
                     id: endNode.elementId,
                     label: endNodeLabels,
-                    properties: endNode.properties,
+                    properties: processProperties(endNode.properties),
                     icon: meta.node_icon[label],
                     color: meta.node_color[label],
                     title: label,

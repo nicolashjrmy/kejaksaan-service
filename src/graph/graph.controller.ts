@@ -17,7 +17,7 @@ UseGuards(JwtAuthGuard);
 export class GraphController {
   constructor(private readonly neo4jService: Neo4jService) {}
 
-  @Get('expand-list/:id')
+  @Get('expand-list')
   async getExpandList(@Param('id') id: string) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
@@ -30,7 +30,7 @@ export class GraphController {
     }));
   }
 
-  @Get('expand/:id/:rel')
+  @Get('expand')
   async getExpand(@Param('id') id: string, @Param('rel') rel: string) {
     const result = await this.neo4jService.read(
       `match p = (n)-[r]-()
