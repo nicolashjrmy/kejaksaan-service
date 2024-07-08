@@ -112,7 +112,7 @@ export class JaringanBuronanController {
     @Query('sus_ph') sus_ph: string,
   ) {
     const result = await this.neo4jService.read(
-      `optional match p1=shortestPath((aa:Follower{username:$neodash_fol_sus1})-[*]-(bb:Kaki_Tangan{phone_number:$neodash_sus_ph}))
+      `optional match p1=shortestPath((aa:Follower{username:"${fol_sus}"})-[*]-(bb:Kaki_Tangan{phone_number:"${sus_ph}"}))
       optional match p2=(bb)--(ca:Call_Suspicious)--()
       return p1,p2`,
     );
