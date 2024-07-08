@@ -60,7 +60,12 @@ export function formatResponse(records: any[]): any {
               const processProperties = (properties: any): any => {
                 const processedProperties: any = {};
                 for (const key in properties) {
-                  if (properties[key] && typeof properties[key] === 'object') {
+                  if (Array.isArray(properties[key])) {
+                    processedProperties[key] = properties[key];
+                  } else if (
+                    properties[key] &&
+                    typeof properties[key] === 'object'
+                  ) {
                     if ('low' in properties[key]) {
                       processedProperties[key] = properties[key].low;
                     } else {
@@ -74,6 +79,7 @@ export function formatResponse(records: any[]): any {
                 }
                 return processedProperties;
               };
+
               startNodeLabels.forEach((label: string) => {
                 if (startNode && !nodes.has(startNode.elementId)) {
                   nodes.set(startNode.elementId, {
