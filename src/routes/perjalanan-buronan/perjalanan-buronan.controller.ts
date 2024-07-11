@@ -22,9 +22,9 @@ export class PerjalananBuronanController {
   async getSuspectJourney() {
     const result = await this.neo4jService.read(
       `match p1=(a)-[:TIMELINE]->(b) 
-        with p1,a,
-        case when $neodash_custom1='' then a.timestamp else $neodash_custom1 end as rule1
-        where a.timestamp=rule1 or b.timestamp=rule1
+        // with p1,a,
+        // case when $neodash_custom1='' then a.timestamp else $neodash_custom1 end as rule1
+        // where a.timestamp=rule1 or b.timestamp=rule1
         return p1`,
     );
     const formatResult = formatResponse(result.records);
