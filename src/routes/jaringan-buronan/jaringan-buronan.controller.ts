@@ -84,7 +84,7 @@ export class JaringanBuronanController {
     }));
   }
 
-  @Post('graph-network-buron')
+  @Get('graph-network-buron')
   async getJaringanBuron(
     @Query('buron') buron: string,
     @Query('platform') platform: string,
