@@ -84,22 +84,20 @@ export class JaringanBuronanController {
     }));
   }
 
-  @Post('jaringan-buron')
+  @Post('graph-network-buron')
   async getJaringanBuron(
-    @Body('keluarga') keluarga: string,
-    @Body('teman') teman: string,
-    @Body('rekan_kerja') rekan_kerja: string,
-    @Body('kel1') kel1: string,
-    @Body('platform') platform: string,
-    @Body('fol_sus1') folsus1: string,
+    @Query('buron') buron: string,
+    @Query('platform') platform: string,
+    @Query('keluarga') keluarga: string,
+    @Query('username') username: string,
   ) {
     const result = await this.neo4jService.read(
-      `optional match p1=(bu:Buronan)-[:PUNYA_KELUARGA]->(:Keluarga{relasi:$neodash_buron1})
-      optional match p2=(bu)-[:PUNYA_TEMAN]->(:Teman{relasi:$neodash_buron1})
-      optional match p3=(bu)-[:PUNYA_REKAN_KERJA]->(:Rekan_Kerja{relasi:$neodash_buron1})
-      optional match p4=(bu{nama:$neodash_buron1})--(a{nama:$neodash_kel1})-[r:PUNYA_SOSMED]->(b)
-      optional match p5=(aa where aa.followers < 10)-[:FOLLOWS]->(b{platform:$neodash_plat1})<-[:PUNYA_SOSMED]-(ke)
-      optional match p6=(aa{username:$neodash_fol_sus1})--(:FacebookAccount)
+      `optional match p1=(bu:Buronan)-[:PUNYA_KELUARGA]->(:Keluarga{relasi:"${buron}"})
+      optional match p2=(bu)-[:PUNYA_TEMAN]->(:Teman{relasi:"${buron}"})
+      optional match p3=(bu)-[:PUNYA_REKAN_KERJA]->(:Rekan_Kerja{relasi:"${buron}"})
+      optional match p4=(bu{nama:"${buron}"})--(a{nama:"${keluarga}"})-[r:PUNYA_SOSMED]->(b)
+      optional match p5=(aa where aa.followers < 10)-[:FOLLOWS]->(b{platform:"${platform}"})<-[:PUNYA_SOSMED]-(ke)
+      optional match p6=(aa{username:"${username}"})--(:FacebookAccount)
       return p1,p2,p3,p4,p5,p6`,
     );
     const formatResult = formatResponse(result.records);
