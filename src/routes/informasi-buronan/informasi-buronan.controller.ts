@@ -12,6 +12,7 @@ import { formatResponse } from 'src/neo4j/neo4j.utils';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 import { Relationship, Result } from 'neo4j-driver';
 import { log } from 'console';
+import { start } from 'repl';
 
 @UseGuards(JwtAuthGuard)
 @Controller('informasi-buronan')
@@ -33,10 +34,10 @@ export class InformasiBuronanController {
   }
 
   @Get('website')
-  async getWebsite() {
+  async getWebsite(@Query('email') email: string) {
     const result = await this.neo4jService.read(
       `match (we:Website)
-        where we.content contains 'harunmasiku@example.com'
+        where we.content contains '${email}'
         return we.url,we.content`,
     );
     return result.records.map((record) => ({
@@ -46,9 +47,9 @@ export class InformasiBuronanController {
   }
 
   @Get('transaksi-bank')
-  async getTransaksiBank() {
+  async getTransaksiBank(@Query('no_rek') no_rek: string) {
     const result = await this.neo4jService.read(
-      `MATCH p=(a{no_rekening:'2907991604'})-[r:HAS_TRANSACTION]->(b) 
+      `MATCH p=(a{no_rekening:'${no_rek}'})-[r:HAS_TRANSACTION]->(b) 
       RETURN a.no_rekening,b.tx_date,b.type,b.vendor
       order by b.tx_date desc`,
     );
@@ -61,15 +62,35 @@ export class InformasiBuronanController {
   }
 
   @Get('phone-call')
-  async getPhonecall() {
+  async getPhonecall(
+    @Param('start_date') start_date: any,
+    @Param('end_date') end_date: any,
+    @Query('no_hp') no_hp: string,
+  ) {
     const result = await this.neo4jService.read(
-      `MATCH p1=(ph1:PhoneNumber)--(a:Call)-[r:TIMELINE]->(b:Call_Suspicious{dateTime:"2020-12-19"})--(ph2:PhoneNumber)
-        with collect(ph1.phone_number) as pho1
-        unwind pho1 as phone1
-        return distinct phone1`,
+      `match (a:Buronan{nama:"Harun Masiku"})-[:PUNYA_HP]->(b:NO_HP)-[:HAS_CONTACT_PHONE]->(c:Contact_Phone)
+      where "${start_date}" <= c.dateTime <= "${end_date}"
+      and
+      b.no_hp[0]="${no_hp}" or b.no_hp[1]="${no_hp}"
+      return  c.added_date as Tanggal_Ditambah, c.number as No_Kontak, c.provider as Provider
+      order by Tanggal_Ditambah desc`,
     );
     return result.records.map((record) => ({
-      Telfon: record.get('phone1'),
+      Tanggal_Ditambah: record.get('Tanggal_Ditambah'),
+      No_Kontak: record.get('No_Kontak'),
+      Provider: record.get('Provider'),
+    }));
+  }
+
+  @Get('nik-web')
+  async getNikWeb(@Query('nik') nik: string) {
+    const result = await this.neo4jService.read(
+      `MATCH (n:NIK {nik: "${nik}"})-[r:NIK_FOUND_IN]->(w: Website_New)
+      RETURN w.found_date as tanggal, w.url as website order by tanggal desc`,
+    );
+    return result.records.map((record) => ({
+      Used_in_Website: record.get('website'),
+      Tanggal: record.get('tanggal'),
     }));
   }
 
