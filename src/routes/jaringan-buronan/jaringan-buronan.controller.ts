@@ -16,7 +16,7 @@ import { query } from 'express';
 @UseGuards(JwtAuthGuard)
 @Controller('jaringan-buronan')
 export class JaringanBuronanController {
-  constructor(private readonly neo4jService: Neo4jService) {}
+  constructor(private readonly neo4jService: Neo4jService) { }
 
   @Get('list-buron')
   async getListBuron() {
@@ -62,6 +62,24 @@ export class JaringanBuronanController {
     return result.records.map((record) => ({
       Nama: record.get('Nama'),
       Hubungan: record.get('Hubungan'),
+    }));
+  }
+
+  @Get('list-sosmed')
+  async getListSosmed(
+    @Query('nama_buron') nama_buron: string,
+    @Query('nama_kontak') nama_kontak: string,
+  ) {
+    const result = await this.neo4jService.read(
+      `MATCH p=(:Buronan{nama:"${nama_buron}"})--(a{nama:"${nama_kontak}"})-[r:PUNYA_SOSMED]->(b)
+return a.nama as Nama, b.followers as Followers, b.following as Following, b.username as Username, b.platform as Platform`,
+    );
+    return result.records.map((record) => ({
+      Nama: record.get('Nama'),
+      Followers: record.get('Followers'),
+      Following: record.get('Following'),
+      Username: record.get('Username'),
+      Platform: record.get('Platform'),
     }));
   }
 
