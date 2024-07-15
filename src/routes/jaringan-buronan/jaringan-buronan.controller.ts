@@ -76,8 +76,8 @@ return a.nama as Nama, b.followers as Followers, b.following as Following, b.use
     );
     return result.records.map((record) => ({
       Nama: record.get('Nama'),
-      Followers: record.get('Followers'),
-      Following: record.get('Following'),
+      Followers: record.get('Followers').low,
+      Following: record.get('Following').low,
       Username: record.get('Username'),
       Platform: record.get('Platform'),
     }));
@@ -90,15 +90,15 @@ return a.nama as Nama, b.followers as Followers, b.following as Following, b.use
     @Query('kel1') kel1: string,
   ) {
     const result = await this.neo4jService.read(
-      `MATCH p=(a)-[r:FOLLOWS]->(b{platform:"${platform}"})<-[:PUNYA_SOSMED]-({nama:"${kel1}")--(:Buronan{nama:"${nama_buron}"})
+      `MATCH p=(a)-[r:FOLLOWS]->(b{platform:"${platform}"})<-[:PUNYA_SOSMED]-({nama:"${kel1}"})--(:Buronan{nama:"${nama_buron}"})
         return b.platform as Platform, b.username as Subject, a.username as Followers, a.followers as Followers_Followers, a.following as Followers_Following, a.chat_frequency as Frekuensi_Chat_Hari`,
     );
     return result.records.map((record) => ({
       Platform: record.get('Platform'),
       Subject: record.get('Subject'),
       Followers: record.get('Followers'),
-      Followers_Followers: record.get('Followers_Followers'),
-      Followers_Following: record.get('Followers_Folllowing'),
+      Followers_Followers: record.get('Followers_Followers').low,
+      Followers_Following: record.get('Followers_Following').low,
     }));
   }
 
