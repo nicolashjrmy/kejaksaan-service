@@ -128,3 +128,22 @@ export function formatResponse(records: any[]): any {
 
   return { nodes: Array.from(nodes.values()), edges: uniqueEdges, meta };
 }
+
+export function formatProperties(properties: any): any {
+  if (Array.isArray(properties)) {
+    return properties.map(formatProperties);
+  } else if (typeof properties === 'object' && properties !== null) {
+    const transformed = {};
+    for (const key of Object.keys(properties)) {
+      const value = properties[key];
+      if (value && typeof value === 'object' && 'low' in value) {
+        transformed[key] = value.low;
+      } else {
+        transformed[key] = formatProperties(value);
+      }
+    }
+    return transformed;
+  } else {
+    return properties;
+  }
+}

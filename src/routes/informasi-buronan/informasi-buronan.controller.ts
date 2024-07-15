@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { formatResponse } from 'src/neo4j/neo4j.utils';
+import { formatResponse, formatProperties } from 'src/neo4j/neo4j.utils';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 import { Relationship, Result } from 'neo4j-driver';
 import { log } from 'console';
@@ -76,7 +76,7 @@ export class InformasiBuronanController {
       order by Tanggal_Ditambah desc`,
     );
     return result.records.map((record) => ({
-      Tanggal_Ditambah: record.get('Tanggal_Ditambah'),
+      Tanggal_Ditambah: formatProperties(record.get('Tanggal_Ditambah')),
       No_Kontak: record.get('No_Kontak'),
       Provider: record.get('Provider'),
     }));
@@ -90,7 +90,7 @@ export class InformasiBuronanController {
     );
     return result.records.map((record) => ({
       Used_in_Website: record.get('website'),
-      Tanggal: record.get('tanggal'),
+      Tanggal: formatProperties(record.get('tanggal')),
     }));
   }
 
